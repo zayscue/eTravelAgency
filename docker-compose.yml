@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  sql.data:
+    image: microsoft/mssql-server-linux:2017-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433" 
+  vehicles.catalog.api:
+    build: 
+      context: ./src/Services/Vehicles.Catalog/
+      dockerfile: Dockerfile
+    depends_on:
+      - sql.data
+    ports:
+     - "5000:80"

@@ -1,18 +1,15 @@
-FROM microsoft/aspnetcore:2.1 AS base
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/aspnetcore-build:2.1 AS build
+FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY Vehicles.Catalog.sln ./
-COPY Vehicles.Catalog.csproj
-RUN dotnet restore -nowarn:msb3202,nu1503
 COPY . .
-WORKDIR /src/
-RUN dotnet build -c Release -o /app
+RUN dotnet restore -nowarn:msb3202,nu1503
+RUN dotnet build --no-restore -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish -c Release -o /app
+RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

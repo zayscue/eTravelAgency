@@ -13,9 +13,9 @@ namespace Vehicles.Catalog.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IRepositoryBase<Vehicle> _vehicles;
-        private readonly ILogger<VehicleController> _logger;
+        private readonly ILogger<VehiclesController> _logger;
 
-        public VehicleController(IRepositoryBase<Vehicle> vehicles, ILogger<VehicleController> logger)
+        public VehiclesController(IRepositoryBase<Vehicle> vehicles, ILogger<VehiclesController> logger)
         {
             _vehicles = vehicles ?? throw new ArgumentNullException(nameof(vehicles));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -24,7 +24,7 @@ namespace Vehicles.Catalog.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Vehicle>> Get()
         {
-            return Ok(_vehicles.GetAll().AsEnumerable());
+            return Ok(_vehicles.GetAll().ToList());
         }
     }
 }

@@ -54,7 +54,8 @@ namespace Vehicles.Catalog.Migrations
                     b.Property<string>("Model")
                         .IsRequired();
 
-                    b.Property<decimal>("PriceRate");
+                    b.Property<decimal>("PriceRate")
+                        .HasColumnType("decimal(5, 2)");
 
                     b.Property<int>("ReservedThreshold");
 
@@ -90,12 +91,12 @@ namespace Vehicles.Catalog.Migrations
             modelBuilder.Entity("Vehicles.Catalog.Models.Vehicle", b =>
                 {
                     b.HasOne("Vehicles.Catalog.Models.Classification", "Classification")
-                        .WithMany("Vehicles")
+                        .WithMany()
                         .HasForeignKey("ClassificationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Vehicles.Catalog.Models.VehicleType", "VehicleType")
-                        .WithMany("Vehicles")
+                        .WithMany()
                         .HasForeignKey("VehicleTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
