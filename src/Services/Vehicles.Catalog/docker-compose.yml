@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  vehicles.catalog:
+    image: vehicles
+    build:
+      context: .
+      dockerfile: Dockerfile
