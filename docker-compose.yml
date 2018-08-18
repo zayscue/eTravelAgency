@@ -10,7 +10,7 @@ services:
       - "1433:1433" 
   vehicles.catalog.api:
     build: 
-      context: ./src/Services/Vehicles.Catalog/
+      context: ./src/Services/Vehicles/
       dockerfile: Dockerfile
     depends_on:
       - sql.data
