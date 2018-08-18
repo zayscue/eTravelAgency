@@ -7,8 +7,14 @@ import com.etravelagency.hotels.models.Hotel;
 import com.etravelagency.hotels.models.Room;
 import com.etravelagency.hotels.models.RoomType;
 
-public class SeedData {
-    public static final List<Hotel> G_HOTELS = Arrays.asList(new Hotel[] {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
+
+@Component
+public class SeedDataLoader implements ApplicationRunner {
+    private static final List<Hotel> PRECONFIGURED_HOTELS = Arrays.asList(new Hotel[] {
         new Hotel("Marriott at Research Triangle Park", 
                 "4700 Guardian Drive",
                 "Durham",
@@ -35,4 +41,17 @@ public class SeedData {
                 })
         )
     });
+
+    private HotelRepository hotels;
+
+    @Autowired
+    public SeedDataLoader(HotelRepository hotels) {
+        this.hotels = hotels;
+    }
+
+    public void run(ApplicationArguments args) {
+        if(hotels.count() == 0) {
+            hotels.saveAll(PRECONFIGURED_HOTELS);
+        }
+    }
 }

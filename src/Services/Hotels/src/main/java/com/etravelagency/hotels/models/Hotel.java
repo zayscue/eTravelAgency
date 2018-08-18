@@ -1,9 +1,14 @@
 package com.etravelagency.hotels.models;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 
+@Document(collection = "hotels")
 public final class Hotel {
+    @Id
     private ObjectId id;
     private String name;
     private String street;
@@ -116,5 +121,13 @@ public final class Hotel {
 
     public void setRoomTypes(final List<RoomType> roomTypes) {
         this.roomTypes = roomTypes;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                    "name='" + name + '\'' + "," +
+                    "company=''" + company + '\'' +
+               "}";
     }
 }
