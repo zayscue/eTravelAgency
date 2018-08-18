@@ -2,13 +2,21 @@
     "name": "flights.api",
     "version": "1.0.0",
     "description": "Node.js microservice used to manage flights and their available seats",
-    "author" : "Zackery Ayscue",
+    "author": "Zackery Ayscue",
+    "license": "MIT",
+    "repository": {
+        "type" : "git",
+        "url" : "https://github.com/zayscue/eTravelAgency.git"
+    },
     "maing": "server.js",
     "scripts": {
-        "start": "node server.js"
+        "start": "node server.js",
+        "debug": "node --nolazy --inspect-brk=9229 server.js"
     },
     "dependencies": {
         "express": "^4.16.3",
-        "redis": "^2.8.0"
+        "moment": "^2.22.2",
+        "redis": "^2.8.0",
+        "shortid": "^2.2.13"
     }
 }
