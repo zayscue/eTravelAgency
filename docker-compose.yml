@@ -1,11 +1,20 @@
 version: '3.4'
 
 services:
-  mongodb.data:
+  messagebroker:
+    image: rabbitmq:3-management-alpine
+    ports: 
+      - "5672:5672"
+      - "15672:15672"
+  flights.data:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  hotels.data:
     image: mongo
     ports:
       - "27017:27017"
-  sql.data:
+  vehicles.data:
     image: microsoft/mssql-server-linux:2017-latest
     environment:
       - SA_PASSWORD=Pass@word
@@ -17,7 +26,8 @@ services:
       context: ./src/Services/Vehicles/
       dockerfile: Dockerfile
     depends_on:
-      - sql.data
+      - vehicles.data
+      - messagebroker
     ports:
      - "5000:80"
   hotels.api:
@@ -25,6 +35,16 @@ services:
       context: ./src/Services/Hotels/
       dockerfile: Dockerfile
     depends_on:
-      - mongodb.data
+      - hotels.data
+      - messagebroker
     ports:
       - "8080:8080"
+  flights.api:
+    build:
+      context: ./src/Services/Flights/
+      dockerfile: Dockerfile
+    depends_on:
+      - flights.data
+      - messagebroker
+    ports:
+      - "8081:8080"

@@ -1,0 +1,13 @@
+{
+    "name": "flights.api",
+    "version": "1.0.0",
+    "description": "Node.js microservice used to manage flights and their available seats",
+    "author" : "Zackery Ayscue",
+    "maing": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.16.3"
+    }
+}
