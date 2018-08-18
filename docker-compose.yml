@@ -1,6 +1,10 @@
 version: '3.4'
 
 services:
+  mongodb.data:
+    image: mongo
+    ports:
+      - "27017:27017"
   sql.data:
     image: microsoft/mssql-server-linux:2017-latest
     environment:
@@ -8,7 +12,7 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "1433:1433" 
-  vehicles.catalog.api:
+  vehicles.api:
     build: 
       context: ./src/Services/Vehicles/
       dockerfile: Dockerfile
@@ -16,3 +20,11 @@ services:
       - sql.data
     ports:
      - "5000:80"
+  hotels.api:
+    build:
+      context: ./src/Services/Hotels/
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb.data
+    ports:
+      - "8080:8080"
