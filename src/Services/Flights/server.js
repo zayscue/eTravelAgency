@@ -7,8 +7,8 @@ const shortid = require('shortid');
 const {promisify} = require('util');
 
 const PORT = 8080;
-const HOST = 'localhost';
-const REDIS_HOST = 'localhost';
+const HOST = '0.0.0.0';
+const REDIS_HOST = 'flights.data';
 const FLIGHTS = [
     {
         "id": "VayEUZWn9",
