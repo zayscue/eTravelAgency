@@ -133,6 +133,41 @@ async function flightsDataSeeder() {
                 }
                 await hsetAsync(key, propertyName, valueStr);
             }
+            const planeExists = await existsAsync(flight.plane);
+            if(planeExists) {
+                const plane = await hgetallAsync(flight.plane);
+                const seatingChart = JSON.parse(plane.seatingChart);
+                const fistClassRows = JSON.parse(plane.firstClass);
+                const businessClassRows = JSON.parse(plane.businessClass);
+                const economyClassRows = JSON.parse(plane.economyClass);
+                for(let i = 0; i < fistClassRows.length; i++) {
+                    const row = seatingChart[fistClassRows[i]];
+                    for(let j = 0; j < row.length; j++) {
+                        const seat = row[j];
+                        if(seat !== 'XXX') {
+                            await saddAsync(`${key}:availableFirstClassSeats`, seat);
+                        }
+                    }
+                }
+                for(let i = 0; i < businessClassRows.length; i++) {
+                    const row = seatingChart[businessClassRows[i]];
+                    for(let j = 0; j < row.length; j++) {
+                        const seat = row[j];
+                        if(seat !== 'XXX') {
+                            await saddAsync(`${key}:availableBusinessClassSeats`, seat);
+                        }
+                    }
+                }
+                for(let i = 0; i < economyClassRows.length; i++) {
+                    const row = seatingChart[economyClassRows[i]];
+                    for(let j = 0; j < row.length; j++) {
+                        const seat = row[j];
+                        if(seat !== 'XXX') {
+                            await saddAsync(`${key}:availableEconomyClassSeats`, seat);
+                        }
+                    }
+                }
+            }
         }
     }
 };
@@ -154,7 +189,28 @@ startupPromise.then(function() {
         let flights = [];
         for(let i = 0; i < members.length; i++) {
             const flightKey = members[i];
-            flights.push(await hgetallAsync(flightKey));
+            let flight = await hgetallAsync(flightKey);
+            flight.firstClassRate = parseFloat(flight.firstClassRate, 10.00);
+            flight.businessClassRate = parseFloat(flight.businessClassRate, 10.00);
+            flight.economyClassRate = parseFloat(flight.economyClassRate, 10.00);
+            if(!flight.plane) {
+                flight.plane = null;
+            } else  {
+                const planeExists = await existsAsync(flight.plane);
+                if(planeExists) {
+                    let plane = await hgetallAsync(flight.plane);
+                    plane.numberOfSeats = parseInt(plane.numberOfSeats, 10);
+                    plane.firstClass = JSON.parse(plane.firstClass);
+                    plane.businessClass = JSON.parse(plane.businessClass);
+                    plane.economyClass = JSON.parse(plane.economyClass);
+                    let seatingChart = JSON.parse(plane.seatingChart);
+                    plane.seatingChart = seatingChart;
+                    flight.plane = plane;
+                } else  {
+                    flight.plane = null;
+                }
+            }
+            flights.push(flight);
         }
         res.json(flights);
     });
@@ -165,6 +221,26 @@ startupPromise.then(function() {
         const key = `flight:${flightId}`;
         if(await sismemberAsync('flights', key)) {
             const flight = await hgetallAsync(key);
+            flight.firstClassRate = parseFloat(flight.firstClassRate, 10.00);
+            flight.businessClassRate = parseFloat(flight.businessClassRate, 10.00);
+            flight.economyClassRate = parseFloat(flight.economyClassRate, 10.00);
+            if(!flight.plane) {
+                flight.plane = null;
+            } else  {
+                const planeExists = await existsAsync(flight.plane);
+                if(planeExists) {
+                    let plane = await hgetallAsync(flight.plane);
+                    plane.numberOfSeats = parseInt(plane.numberOfSeats, 10);
+                    plane.firstClass = JSON.parse(plane.firstClass);
+                    plane.businessClass = JSON.parse(plane.businessClass);
+                    plane.economyClass = JSON.parse(plane.economyClass);
+                    let seatingChart = JSON.parse(plane.seatingChart);
+                    plane.seatingChart = seatingChart;
+                    flight.plane = plane;
+                } else  {
+                    flight.plane = null;
+                }
+            }
             res.json(flight);
         } else  {
             res.status(404).send('Not found');
